@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode =  "prisma"
+}
+
+model tasks {
+  id               Int      @id @default(autoincrement())
+  id_user          Int
+  task_name        String
+  task_description String   @db.Text
+  created_at       DateTime @default(now())
+  user             users?    @relation(fields: [id_user], references: [id])
+
+  @@index([id_user])
+}
+
+model users {
+  id               Int      @id @default(autoincrement())
+  name             String   
+  email            String   @unique
+  password         String
+  avatar           String?
+  created_at       DateTime @default(now())
+  tasks            tasks[]
+}
+
+model schools {
+  id              Int       @id @default(autoincrement())
+  school_name     String    
+  email           String?
+  address         String?
+  phone           String?
+}
+
+model admin_pengguna {
+  id              Int       @id @default(autoincrement())
+  nama            String    
+  peran           String
+  email           String    @unique
+  password        String
+  created_at      DateTime  @default(now())
+}
+
+model daftar_pengguna {
+  id              Int       @id @default(autoincrement())
+  nama            String    
+  divisi          String
+  email           String    @unique
+  telepon         String    @unique
+  created_at      DateTime  @default(now())
+}
+
+model daftar_asset {
+  id_asset           Int        @id @default(autoincrement())
+  id_pengguna        Int
+  qrcode             String
+  nama_barang        String
+  tanggal_pembelian  String
+  nomer_pembelian    String
+  lampiran           String
+  sn                 String
+  garansi            String
+  kategori           String
+  spesifikasi        String
+  catatan            String
+  status             String
+  create_at          DateTime   @default(now())
+}
